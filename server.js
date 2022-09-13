@@ -1,6 +1,7 @@
 
 const express = require('express')
-const path = require("path");
+const mailer = require("./server/mailer");
+
 const app = express()
 
 // #############################################################################
@@ -15,6 +16,11 @@ var options = {
   redirect: false
 }
 app.use(express.static('build', options))
+
+app.get("/api/sendMail", function (req, res) {
+  mailer.sendMail([{ url: "foo", value: 1, prevItem: { value: 2 } }]);
+  res.send("sendMail");
+});
 
 const port = process.env.PORT || 3000
 
