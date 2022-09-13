@@ -1,7 +1,7 @@
 
 const mailer = require("./mailer");
 const model = require("./model");
-const { fetch } = require("./fetch");
+const fetch = require("./fetch");
 
 const sendNotification = (items) => {
     const updatedItems = items.filter((item) => item.updateFlag);
@@ -33,30 +33,15 @@ const fetchAll = async () => {
     console.log("fetched items", items.length);
 
     sendNotification(items);
-    model.disconnect();
 
     return items;
 };
 
-const save = ({ url, selector, value }) => {
-    return model.save({ url, selector, value });
-};
-
-const update = ({ _id, url, selector, value }) => {
-    return model.update({ _id, url, selector, value });
-};
-
-const deleteById = (_id) => {
-    return model.deleteById(_id);
-};
-
-const getAll = () => {
-    return model.getAll();
-}
-
-const connect = () => {
-    return model.connect();
-}
+const connect = () =>  model.connect();
+const deleteById = (_id) => model.deleteById(_id);
+const update = (site) => model.update(site);
+const save = (site) =>  model.save(site);
+const getAll = () => model.getAll();
 
 module.exports = {
     fetchAndSave,

@@ -3,8 +3,7 @@ require("dotenv").config();
 const express = require('express')
 const bodyParser = require('body-parser')
 const mailer = require("./server/mailer");
-const { connect, save, update, getAll, deleteById } = require("./server/repo");
-const { fetch } = require("./server/fetch");
+const { connect, save, update, getAll, deleteById, fetch, fetchAll } = require("./server/repo");
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -43,6 +42,16 @@ app.delete("/api/sites", async (req, res) => {
   res.json({ _id });
 });
 
+app.get("/api/fetch", async (req, res) => {
+  const sites = await fetchAll();
+
+  // sites.map(async (site) => {
+  //   const { url, selector } = site;
+  //   const content = await fetch({ url, selector })
+  //   console.log(content)
+  // })
+  res.json(sites);
+});
 
 app.put("/api/fetch", async (req, res) => {
   const { url, selector } = req.body
