@@ -2,9 +2,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mailer = require("./server/mailer");
-const { connect, save, update, getAll, deleteById } = require("./repo");
+const { connect, save, update, getAll, deleteById } = require("./server/repo");
 
-const port = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 const app = express()
 
 connect()
@@ -17,12 +17,11 @@ app.get("/api/sites", async (req, res) => {
   res.json(sites);
 });
 
-
 app.get("/api/sendMail", function (req, res) {
   mailer.sendMail([{ url: "foo", value: 1, prevItem: { value: 2 } }]);
   res.send("sendMail");
 });
 
-app.listen(port, () => {
-  console.log(`React app listening at http://localhost:${port}`)
-})
+app.listen(PORT, () => {
+  console.log("Server started at", PORT);
+});
