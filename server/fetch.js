@@ -5,7 +5,11 @@ async function fetch({ url, selector }) {
     console.log("fetch", url, selector);
 
     try {
-        const resp = await axios.get(url);
+        const resp = await axios.get(url, {
+            headers: {
+                'Accept-Language': 'en-US'
+            }
+        });
         let $ = cheerio.load(resp.data);
 
         if(selector.startsWith('noscript')) {
