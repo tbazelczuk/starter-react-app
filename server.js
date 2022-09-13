@@ -2,12 +2,20 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mailer = require("./server/mailer");
+const { connect, save, update, getAll, deleteById } = require("./repo");
 
 const port = process.env.PORT || 3000
 const app = express()
 
+connect()
+
 app.use(express.static('build'))
 app.use(bodyParser.urlencoded({ extended: false }))
+
+app.get("/api/sites", async (req, res) => {
+  const sites = await getAll();
+  res.json(sites);
+});
 
 
 app.get("/api/sendMail", function (req, res) {
