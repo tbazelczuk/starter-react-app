@@ -4,18 +4,50 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mailer = require("./server/mailer");
 const { connect, save, update, getAll, deleteById } = require("./server/repo");
+const { fetch } = require("./server/fetch");
 
-const PORT = process.env.PORT || 3000
-const app = express()
+const PORT = process.env.PORT || 3000;
+const app = express();
 
 connect()
 
-app.use(express.static('build'))
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.use(express.static("build"));
 
 app.get("/api/sites", async (req, res) => {
   const sites = await getAll();
   res.json(sites);
+});
+
+app.post("/api/sites", async (req, res) => {
+  try {
+    const body = req.body;
+    const site = await save(body);
+    res.json(site);
+  } catch ({ message }) {
+    res.json({ message });
+  }
+});
+
+app.put("/api/sites", async (req, res) => {
+  const body = req.body
+  const site = await update(body)
+  res.json(site);
+});
+
+app.delete("/api/sites", async (req, res) => {
+  const { _id } = req.body
+  await deleteById(_id)
+  res.json({ _id });
+});
+
+
+app.put("/api/fetch", async (req, res) => {
+  const { url, selector } = req.body
+  const content = await fetch({ url, selector })
+  res.json({ content });
 });
 
 app.get("/api/sendMail", function (req, res) {
