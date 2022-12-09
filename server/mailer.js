@@ -7,6 +7,7 @@ const clientSecret = process.env.CLIENT_SECRET;
 const refreshToken = process.env.REFRESH_TOKEN;
 
 const createTransporter = async () => {
+  try {
   const oauth2Client = new OAuth2(
     clientId,
     clientSecret,
@@ -16,7 +17,7 @@ const createTransporter = async () => {
     refresh_token: refreshToken
   });
   console.log(1)
-  try {
+
 
   const accessToken = await new Promise((resolve, reject) => {
     oauth2Client.getAccessToken((err, token) => {
@@ -28,9 +29,7 @@ const createTransporter = async () => {
       resolve(token);
     });
   });
-}catch (error) {
-  console.log(22, error)
-  }
+
   console.log(2)
 
   const transporter = nodemailer.createTransport({
@@ -47,6 +46,10 @@ const createTransporter = async () => {
   console.log(3)
 
   return transporter;
+
+}catch (error) {
+  console.log(22, error)
+  }
 };
 
 const sendEmail = async (emailOptions) => {
