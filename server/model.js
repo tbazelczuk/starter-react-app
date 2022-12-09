@@ -16,6 +16,8 @@ var NewsSchema = new mongoose.Schema(
 
 const NewsModel = mongoose.model("News", NewsSchema);
 
+mongoose.set('strictQuery', false)
+
 async function connect() {
   return new Promise(function (resolve, reject) {
     mongoose.connect(

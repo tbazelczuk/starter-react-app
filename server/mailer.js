@@ -10,12 +10,16 @@ const createTransporter = async () => {
   try {
   const oauth2Client = new OAuth2(
     clientId,
-    clientSecret,
-    "https://developers.google.com/oauthplayground"
+    clientSecret
   );
-  oauth2Client.setCredentials({
-    refresh_token: refreshToken
+
+  oauth2Client.refreshAccessToken(function(err, tokens){
+    console.log(tokens)
+
   });
+  // oauth2Client.setCredentials({
+  //   refresh_token: refreshToken
+  // });
   console.log(1)
 
 
