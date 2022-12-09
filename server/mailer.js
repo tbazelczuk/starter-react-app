@@ -26,11 +26,6 @@ const createTransporter = async () => {
     });
   });
 
-  console.log(1, accessToken)
-  console.log(2, clientId)
-  console.log(3, clientSecret)
-  console.log(4, refreshToken)
-
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -48,7 +43,11 @@ const createTransporter = async () => {
 
 const sendEmail = async (emailOptions) => {
   let emailTransporter = await createTransporter();
-  await emailTransporter.sendMail(emailOptions);
+  let info = await emailTransporter.sendMail(emailOptions);
+
+  console.log(info)
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 };
 
 function prepareHtmlItem(item) {
