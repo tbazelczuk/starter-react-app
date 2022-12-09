@@ -26,6 +26,11 @@ const createTransporter = async () => {
     });
   });
 
+  console.log(1, accessToken)
+  console.log(2, clientId)
+  console.log(3, clientSecret)
+  console.log(4, refreshToken)
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
