@@ -42,12 +42,16 @@ const createTransporter = async () => {
 };
 
 const sendEmail = async (emailOptions) => {
-  let emailTransporter = await createTransporter();
-  let info = await emailTransporter.sendMail(emailOptions);
+  try {
+    let emailTransporter = await createTransporter();
+    let info = await emailTransporter.sendMail(emailOptions);
 
-  console.log(info)
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    console.log(info)
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 function prepareHtmlItem(item) {
