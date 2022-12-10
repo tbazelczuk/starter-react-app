@@ -44,12 +44,6 @@ app.delete("/api/sites", async (req, res) => {
 
 app.get("/api/fetch", async (req, res) => {
   const sites = await fetchAll();
-
-  // sites.map(async (site) => {
-  //   const { url, selector } = site;
-  //   const content = await fetch({ url, selector })
-  //   console.log(content)
-  // })
   res.json(sites);
 });
 

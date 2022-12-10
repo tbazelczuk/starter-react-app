@@ -7,68 +7,45 @@ const clientSecret = process.env.CLIENT_SECRET;
 const refreshToken = process.env.REFRESH_TOKEN;
 
 const createTransporter = async () => {
-  try {
   const oauth2Client = new OAuth2(
     clientId,
     clientSecret
   );
 
-  oauth2Client.refreshAccessToken(function(err, tokens){
-    console.log(tokens)
-
+  oauth2Client.setCredentials({
+    refresh_token: refreshToken
   });
-  // oauth2Client.setCredentials({
-  //   refresh_token: refreshToken
-  // });
-  console.log(1)
-
 
   const accessToken = await new Promise((resolve, reject) => {
-    console.log(1)
-    try {
-      console.log(11, oauth2Client.getAccessToken)
-      oauth2Client.getAccessToken((err, token) => {
-        console.log(2, err)
-        if (err) {
-          console.log(err);
-          reject("Failed to create access token :(");
-        }
-        resolve(token);
-      });
-    } catch (error) {
-      console.log(111, error)
-    }
-    
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) {
+        reject("Failed to create access token :(");
+      }
+      resolve(token);
+    });
+
   });
 
-  console.log(2, accessToken)
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: "tbazelczuk@gmail.com",
+      accessToken,
+      clientId,
+      clientSecret,
+      refreshToken
+    },
+  });
 
-  // const transporter = nodemailer.createTransport({
-  //   service: "gmail",
-  //   auth: {
-  //     type: "OAuth2",
-  //     user: "tbazelczuk@gmail.com",
-  //     accessToken,
-  //     clientId,
-  //     clientSecret,
-  //     refreshToken
-  //   },
-  // });
-  console.log(3)
-
-  // return transporter;
-
-}catch (error) {
-  console.log(22, error)
-  }
+  return transporter;
 };
 
 const sendEmail = async (emailOptions) => {
   try {
-    let emailTransporter = await createTransporter();
-    let info = await emailTransporter.sendMail(emailOptions);
+    const emailTransporter = await createTransporter();
+    const info = await emailTransporter.sendMail(emailOptions);
 
-    console.log(info)
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {

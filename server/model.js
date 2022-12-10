@@ -45,10 +45,8 @@ function disconnect() {
 }
 
 async function getAll() {
-  var query = NewsModel.find(null, null, {
-    sort: { created_at: 1 },
-  });
-  return query;
+  const items = await NewsModel.find(null, null, { sort: { created_at: 1 }, lean: true });
+  return items.map(({ _id, url, value, selector }) => ({ _id, url, value, selector }))
 }
 
 const shouldUpdate = (item, doc) => {
@@ -56,15 +54,13 @@ const shouldUpdate = (item, doc) => {
 };
 
 async function save(item) {
-  console.log('save', item);
-
   return new Promise(function (resolve, reject) {
     const { url } = item;
 
     NewsModel.findOne({ url })
       .then((doc) => {
         if (!doc) {
-          var model = new NewsModel(item);
+          let model = new NewsModel(item);
           model
             .save()
             .then((doc) => {
@@ -89,7 +85,7 @@ async function save(item) {
               reject();
             });
         } else {
-          resolve(doc);
+          reject();
         }
       })
       .catch((err) => {
@@ -100,11 +96,12 @@ async function save(item) {
 }
 
 async function saveAll(items) {
-  let arr = [];
+  const arr = [];
   for (var i = 0; i < items.length; i++) {
     arr.push(save(items[i]));
   }
-  return Promise.all(arr);
+  const results = await Promise.allSettled(arr)
+  return results.filter(({ status }) => status === 'fulfilled').map(({ value }) => value)
 }
 
 async function update(item) {
@@ -123,7 +120,7 @@ async function update(item) {
 }
 
 async function find(_id) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     NewsModel.findOne({ _id })
       .then((doc) => {
         resolve(doc);

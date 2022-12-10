@@ -7,12 +7,13 @@ async function fetch({ url, selector }) {
     try {
         const resp = await axios.get(url, {
             headers: {
-                'Accept-Language': 'en-US'
+                "Accept-Language": "en-US",
+                "Accept-Encoding": "gzip,deflate,compress"
             }
         });
         let $ = cheerio.load(resp.data);
 
-        if(selector.startsWith('noscript')) {
+        if (selector.startsWith('noscript')) {
             $ = cheerio.load($('noscript').first().html())
             selector = selector.replace('noscript', '').trim()
         }

@@ -30,9 +30,7 @@ const fetchAll = async () => {
         resp.map(({ url, selector }) => fetch({ url, selector }))
     );
     const items = await model.saveAll(merge(resp, values));
-    console.log("fetched items", items.length);
-
-    sendNotification(items);
+    console.log("updated items", items.length);
 
     return items;
 };
